@@ -1,46 +1,47 @@
-### **Updated `StringLinkedList.h`**
-#pragma once
-
 #include <iostream>
+#include <string>
 using namespace std;
 
-#include "StringNode.h"
+// Definition of StringNode structure
+struct StringNode {
+    string elem;          // Element of the node
+    StringNode* next;     // Pointer to the next node
+};
 
+// Definition of StringLinkedList class
 class StringLinkedList {
 public:
-    StringLinkedList();             // empty list constructor
-    ~StringLinkedList();            // destructor
-    bool empty() const;             // is list empty?
-    const string& front() const;    // get front element
-    void addFront(const string& e); // add to front of list
-    void removeFront();             // remove front item
-    void display() const;           // display list elements
+    StringLinkedList();             // Empty list constructor
+    ~StringLinkedList();            // Destructor
+    bool empty() const;             // Check if list is empty
+    const string& front() const;    // Get front element
+    void addFront(const string& e); // Add to front of list
+    void removeFront();             // Remove front item
+    void display() const;           // Display list elements
 
 private:
-    StringNode* head;               // pointer to the head of list
+    StringNode* head;               // Pointer to the head of list
 };
-```
 
----
-
-### **Updated `StringLinkedList.cpp`**
-
-#include "StringLinkedList.h"
-
+// Constructor
 StringLinkedList::StringLinkedList() : head(NULL) { }
 
+// Destructor
 StringLinkedList::~StringLinkedList() {
     while (!empty()) removeFront();
 }
 
+// Check if list is empty
 bool StringLinkedList::empty() const {
     return head == NULL;
 }
 
+// Get front element
 const string& StringLinkedList::front() const {
     return head->elem;
 }
 
+// Add to front of the list
 void StringLinkedList::addFront(const string& e) {
     StringNode* v = new StringNode;
     v->elem = e;
@@ -48,13 +49,14 @@ void StringLinkedList::addFront(const string& e) {
     head = v;
 }
 
+// Remove front item
 void StringLinkedList::removeFront() {
     StringNode* old = head;
     head = old->next;
     delete old;
 }
 
-// ** New display function **
+// Display list elements
 void StringLinkedList::display() const {
     StringNode* current = head;
     while (current != NULL) {
@@ -63,15 +65,8 @@ void StringLinkedList::display() const {
     }
     cout << "NULL" << endl;
 }
-```
 
----
-
-### **Test Program (`main.cpp`)**
-```cpp
-#include <iostream>
-#include "StringLinkedList.h"
-
+// Test program
 int main() {
     StringLinkedList list;
 
@@ -85,4 +80,3 @@ int main() {
 
     return 0;
 }
- 😊
