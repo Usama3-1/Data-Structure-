@@ -2,48 +2,49 @@
 #include <string>
 using namespace std;
 
-// Definition of StringNode structure
+
 struct StringNode {
-    string elem;          // Element of the node
-    StringNode* next;     // Pointer to the next node
+    string elem;          
+    StringNode* next;     
 };
 
-// Definition of StringLinkedList class
+
 class StringLinkedList {
 public:
-    StringLinkedList();             // Empty list constructor
-    ~StringLinkedList();            // Destructor
-    bool empty() const;             // Check if list is empty
-    const string& front() const;    // Get front element
-    void addFront(const string& e); // Add to front of list
-    void removeFront();             // Remove front item
-    void removeLast();              // Remove last item (the first added)
-    void display() const;           // Display list elements
-    string concatenate() const;     // Concatenate all elements
+    StringLinkedList();             
+    ~StringLinkedList();           
+    bool empty() const;             
+    const string& front() const;    
+    void addFront(const string& e); 
+    void removeFront();            
+    void removeLast();              
+    void addBack(const string& e);  
+    void display() const;           
+    string concatenate() const;     
 
 private:
-    StringNode* head;               // Pointer to the head of list
+    StringNode* head;               
 };
 
-// Constructor
+
 StringLinkedList::StringLinkedList() : head(NULL) { }
 
-// Destructor
+
 StringLinkedList::~StringLinkedList() {
     while (!empty()) removeFront();
 }
 
-// Check if list is empty
+
 bool StringLinkedList::empty() const {
     return head == NULL;
 }
 
-// Get front element
+
 const string& StringLinkedList::front() const {
     return head->elem;
 }
 
-// Add to front of the list
+
 void StringLinkedList::addFront(const string& e) {
     StringNode* v = new StringNode;
     v->elem = e;
@@ -51,36 +52,56 @@ void StringLinkedList::addFront(const string& e) {
     head = v;
 }
 
-// Remove front item
+
 void StringLinkedList::removeFront() {
     StringNode* old = head;
     head = old->next;
     delete old;
 }
 
-// Remove last item (the first added item)
-void StringLinkedList::removeLast() {
-    if (head == NULL) return; // Empty list, nothing to remove
 
-    // If only one element in the list, delete the head
+void StringLinkedList::removeLast() {
+    if (head == NULL) return; 
+
+    
     if (head->next == NULL) {
         delete head;
         head = NULL;
         return;
     }
 
-    // Traverse to the second to last node
+
     StringNode* current = head;
     while (current->next && current->next->next != NULL) {
         current = current->next;
     }
 
-    // Delete the last node
+  
     delete current->next;
     current->next = NULL;
 }
 
-// Display list elements
+
+void StringLinkedList::addBack(const string& e) {
+    StringNode* v = new StringNode;
+    v->elem = e;
+    v->next = NULL;
+
+    if (head == NULL) {  
+        head = v;
+    }
+    else {
+    
+        StringNode* current = head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+     
+        current->next = v;
+    }
+}
+
+
 void StringLinkedList::display() const {
     StringNode* current = head;
     while (current != NULL) {
@@ -90,14 +111,14 @@ void StringLinkedList::display() const {
     cout << "NULL" << endl;
 }
 
-// Concatenate all elements into one string
+
 string StringLinkedList::concatenate() const {
     StringNode* current = head;
     string result;
 
     while (current != NULL) {
         if (!result.empty()) {
-            result += " ";  // Add space between words
+            result += " ";  
         }
         result += current->elem;
         current = current->next;
@@ -105,24 +126,35 @@ string StringLinkedList::concatenate() const {
     return result;
 }
 
-// Test program
+
 int main() {
     StringLinkedList list;
 
+   
     list.addFront("World");
     list.addFront("Hello");
     list.addFront("Welcome");
     list.addFront("C++");
 
-    cout << "List elements before removing last added element: ";
+
+    cout << "List elements before adding at the end: ";
     list.display();
 
-    // Remove last element (first added element)
+    
+    list.addBack("Programming");
+
+    
+    cout << "List elements after adding 'Programming' at the end: ";
+    list.display();
+
+    
     list.removeLast();
 
+    
     cout << "List elements after removing last added element: ";
     list.display();
 
+    
     string result = list.concatenate();
     cout << "Concatenated string: " << result << endl;
 
