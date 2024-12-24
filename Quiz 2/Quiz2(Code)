@@ -1,8 +1,17 @@
-
-
-
+#pragma once
+#include <string>
 #include <iostream>
 using namespace std;
+
+typedef string Elem; // element type
+
+class CNode { // circularly linked list node
+private:
+    Elem elem; // linked list element value
+    CNode* next; // next item in the list
+
+    friend class CircleList; // provide CircleList access
+};
 
 class CircleList { // a circularly linked list
 public:
@@ -20,7 +29,6 @@ private:
 };
 
 
-
 bool CircleList::empty() const { // is list empty?
     return cursor == nullptr;
 }
@@ -36,6 +44,37 @@ const Elem& CircleList::front() const { // element following cursor
 void CircleList::advance() { // advance cursor
     cursor = cursor->next;
 }
+
+void CircleList::add(const Elem& e) { // add after cursor
+    CNode* v = new CNode; // create a new node
+    v->elem = e;
+    if (cursor == nullptr) { // list is empty?
+        v->next = v; // v points to itself
+        cursor = v; // cursor points to v
+    }
+    else { // list is non-empty
+        v->next = cursor->next; // link in v after cursor
+        cursor->next = v;
+    }
+}
+
+
+bool CircleList::isEqual(const CircleList& other) const {
+    if (empty() && other.empty()) return true; // Both empty
+    if (empty() || other.empty()) return false; // One is empty, other is not
+
+    CNode* current1 = cursor->next; // Start at front of first list
+    CNode* current2 = other.cursor->next; // Start at front of second list
+
+    do {
+        if (current1->elem != current2->elem) return false; // Mismatch found
+        current1 = current1->next;
+        current2 = current2->next;
+    } while (current1 != cursor->next && current2 != other.cursor->next);
+
+    return current1 == cursor->next && current2 == other.cursor->next; // Ensure both lists completed
+}
+
 
 void CircleList::remove() { // remove node after cursor
     CNode* old = cursor->next; // the node being removed
@@ -55,59 +94,37 @@ CircleList::~CircleList() { // destructor
     while (!empty()) remove();
 }
 
-void CircleList::add(const Elem& e) { // add after cursor
-    CNode* v = new CNode; // create a new node
-    v->elem = e;
-    if (cursor == nullptr) { // list is empty?
-        v->next = v; // v points to itself
-        cursor = v; // cursor points to v
-    }
-    else { // list is non-empty
-        v->next = cursor->next; // link in v after cursor
-        cursor->next = v;
-    }
+
+void testEquality() {
+    CircleList list1, list2, list3;
+
+    list1.add("ABC");
+    list1.add("DEF");
+    list1.add("GHI");
+
+   
+    list2.add("ABC");
+    list2.add("DEF");
+    list2.add("GHI");
+
+    list3.add("XYZ");
+    list3.add("XYZ");
+    list3.add("XYZ");
+
+   
+    cout << "List1 == List2: " << (list1.isEqual(list2) ? "True" : "False") << endl;
+    cout << "List1 == List3: " << (list1.isEqual(list3) ? "True" : "False") << endl; 
+
+    CircleList emptyList1, emptyList2;
+    cout << "EmptyList1 == EmptyList2: " << (emptyList1.isEqual(emptyList2) ? "True" : "False") << endl;
+
+   
+    cout << "List1 == EmptyList1: " << (list1.isEqual(emptyList1) ? "True" : "False") << endl; 
 }
-
-bool CircleList::isEqual(const CircleList& other) const {
-    if (empty() && other.empty()) return true; // Both empty
-    if (empty() || other.empty()) return false; // One is empty, other is not
-
-    CNode* current1 = cursor->next; // Start at front of first list
-    CNode* current2 = other.cursor->next; // Start at front of second list
-
-    do {
-        if (current1->elem != current2->elem) return false; // Mismatch found
-        current1 = current1->next;
-        current2 = current2->next;
-    } while (current1 != cursor->next && current2 != other.cursor->next);
-
-    return current1 == cursor->next && current2 == other.cursor->next; // Ensure both lists completed
-}
-
-
-
-typedef string Elem; // element type
-
-class CNode { // circularly linked list node
-private:
-    Elem elem; // linked list element value
-    CNode* next; // next item in the list
-
-    friend class CircleList; // provide CircleList access
-};
-
-
-
-
-
-
-
 
 int main() {
     testEquality();
     return 0;
 }
-
-
 
 
